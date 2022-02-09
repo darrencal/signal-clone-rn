@@ -1,7 +1,9 @@
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import React, { useLayoutEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input, Text } from 'react-native-elements';
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 const RegisterScreen = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -10,11 +12,19 @@ const RegisterScreen = ({ navigation }) => {
     const [imageUrl, setImageUrl] = useState('');
 
     const register = () => {
-
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(authUser => {
+                // After user is created, update with additional info
+                updateProfile(authUser.user, {
+                    displayName: name,
+                    photoURL: imageUrl || 'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'
+                });
+            })
+            .catch(error => alert(error.message));
     }
 
     return (
-        <KeyboardAvoidingView behavior='padding' style={styles.container}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <StatusBar style='light' />
 
             <Text h3 style={{ marginBottom: 50 }}>
@@ -25,13 +35,12 @@ const RegisterScreen = ({ navigation }) => {
                 <Input 
                     placeholder='Full Name' 
                     autoFocus 
-                    type='text' 
                     value={name} 
                     onChangeText={(text) => setName(text)} 
                 />
                 <Input 
                     placeholder='Email' 
-                    type='email' 
+                    keyboardType='email-address' 
                     value={email} 
                     onChangeText={(text) => setEmail(text)} 
                 />
@@ -58,7 +67,7 @@ const RegisterScreen = ({ navigation }) => {
                 title='Register' 
             />
 
-            <View style={{ height: 100 }} />
+            <View style={{ height: 50 }} />
         </KeyboardAvoidingView>
     );
 };
