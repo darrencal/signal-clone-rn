@@ -1,8 +1,9 @@
-import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -20,7 +21,8 @@ const LoginScreen = ({ navigation }) => {
     
 
     const signIn = () => {
-
+        signInWithEmailAndPassword(auth, email, password)
+            .catch(error => alert(error));
     };
 
     return (
@@ -46,6 +48,7 @@ const LoginScreen = ({ navigation }) => {
                     type='password' 
                     value={password}
                     onChangeText={(text) => setPassword(text)}
+                    onSubmitEditing={signIn}
                 />
             </View>
             <Button containerStyle={styles.button} onPress={signIn} title='Login' />

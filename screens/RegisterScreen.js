@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
-import React, { useLayoutEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input, Text } from 'react-native-elements';
 import { auth } from '../firebase';
@@ -17,7 +17,7 @@ const RegisterScreen = ({ navigation }) => {
                 // After user is created, update with additional info
                 updateProfile(authUser.user, {
                     displayName: name,
-                    photoURL: imageUrl || 'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'
+                    photoURL: imageUrl || 'https://connectingcouples.us/wp-content/uploads/2019/07/avatar-placeholder.png'
                 });
             })
             .catch(error => alert(error.message));
